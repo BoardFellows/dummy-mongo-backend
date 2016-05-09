@@ -40,7 +40,7 @@ describe('/users route', () => {
       .post('/users')
       .send(newUser)
       .end((err, res) => {
-        console.log(res.body);
+        // console.log(res.body);
         expect(err).to.equal(null);
         expect(res.status).to.equal(200);
         expect(res.body.data.username).to.equal(newUser.username);
@@ -52,7 +52,7 @@ describe('/users route', () => {
     });
     it('should have saved a new user in the database', (done) => {
       User.findOne({ username: newUser.username }, (err, user) => {
-        console.log(user);
+        // console.log(user);
         if (err) console.log('ERROR getting new user from database to check against: ', err);
         expect(user.username).to.equal(newUser.username);
         expect(user.email).to.equal(newUser.email);
@@ -81,7 +81,6 @@ describe('/users route', () => {
           expect(res.body.data.email).to.equal(newUser.email);
           expect(res.body.data).to.have.property('authToken');
           done();
-          
         });
       
       
