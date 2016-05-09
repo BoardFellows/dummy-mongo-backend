@@ -29,14 +29,16 @@ function handleBasicAuth(req, res, next) {
     }
     let usernamePasswordArray = authHeadersArray[1].split(':');
     console.log(`Username was: ${usernamePasswordArray[0]}, password was: ${usernamePasswordArray[1]}`);
-    User.findOne({ username: usernamePasswordArray[0] }).exec()
+    User.findOne({ username: usernamePasswordArray[0] })
+      .populate('games friends').exec()
       .then((user) => {
         let validFlag = user.comparePassword(authHeadersArray[1]);
         if (!validFlag) {
           throw new Error('Incorrect password');
         }
         // SUCCESSFUL REQUEST
-        req.user = user;
+        req.user      = user;
+        req.authToken = user.generateAuthToken();
         next();
       })
       .catch((err) => {
