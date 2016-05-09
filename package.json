@@ -4,7 +4,8 @@
   "description": "Backend for scotland yard built with mongo as a learning exercise",
   "main": "backend/server.js",
   "directories": {
-    "test": "test"
+    "test": "test",
+    "start:db": "mongod -dbpath=./backend/db/ --smallfiles"
   },
   "scripts": {
     "test": "gulp test",
@@ -29,6 +30,7 @@
     "mongoose": "^4.4.15"
   },
   "devDependencies": {
+    "btoa": "^1.1.2",
     "chai": "^3.5.0",
     "chai-http": "^2.0.1",
     "gulp": "^3.9.1",

@@ -27,19 +27,31 @@ function handleBasicAuth(req, res, next) {
     if (authHeadersArray[0].toLowerCase() !== 'basic') {
       throw new Error(`Authorization headers of incorrect type: ${authHeadersArray[0]}`);
     }
-    let usernamePasswordArray = authHeadersArray[1].split(':');
+    let decodedAuthHeaders = new Buffer(authHeadersArray[1], 'base64').toString();
+    let usernamePasswordArray = decodedAuthHeaders.split(':');
     console.log(`Username was: ${usernamePasswordArray[0]}, password was: ${usernamePasswordArray[1]}`);
-    User.findOne({ username: usernamePasswordArray[0] }).exec()
+    User.findOne({ username: usernamePasswordArray[0] })
+      .populate('friends').exec() //TODO: add game population
       .then((user) => {
-        let validFlag = user.comparePassword(authHeadersArray[1]);
-        if (!validFlag) {
-          throw new Error('Incorrect password');
+        try {
+          if (!user) {
+            throw new Error('User not found.');
+          }
+          console.log(user);
+          let validFlag = user.comparePassword(usernamePasswordArray[1]);
+          if (!validFlag) {
+            throw new Error('Incorrect password.');
+          }
+          // SUCCESSFUL REQUEST
+          req.user      = user;
+          req.authToken = user.generateAuthToken();
+          next();
+        } catch (err) {
+          authService.handleAuthError(err, res);
         }
-        // SUCCESSFUL REQUEST
-        req.user = user;
-        next();
       })
       .catch((err) => {
+        console.log('ERROR IN authService.handleBasicAuth: ', err);
         throw new Error(err);
       });
     
@@ -81,6 +93,7 @@ function handleAuthToken(req, res, next) {
     
     
   } catch (err) {
+    console.log('ERROR IN authService.handleAuthToken: ', err);
     authService.handleAuthError(err, res);
   }
 }
