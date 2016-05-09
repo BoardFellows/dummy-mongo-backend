@@ -33,15 +33,22 @@ function handleBasicAuth(req, res, next) {
     User.findOne({ username: usernamePasswordArray[0] })
       .populate('friends').exec() //TODO: add game population
       .then((user) => {
-        console.log(user);
-        let validFlag = user.comparePassword(usernamePasswordArray[1]);
-        if (!validFlag) {
-          throw new Error('Incorrect password');
+        try {
+          if (!user) {
+            throw new Error('User not found.');
+          }
+          console.log(user);
+          let validFlag = user.comparePassword(usernamePasswordArray[1]);
+          if (!validFlag) {
+            throw new Error('Incorrect password.');
+          }
+          // SUCCESSFUL REQUEST
+          req.user      = user;
+          req.authToken = user.generateAuthToken();
+          next();
+        } catch (err) {
+          authService.handleAuthError(err, res);
         }
-        // SUCCESSFUL REQUEST
-        req.user      = user;
-        req.authToken = user.generateAuthToken();
-        next();
       })
       .catch((err) => {
         console.log('ERROR IN authService.handleBasicAuth: ', err);

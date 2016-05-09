@@ -63,11 +63,18 @@ describe('/users route', () => {
   });
   
   describe('GET', () => {
-    var retrievedUser = null;
-    // it('should not let you get a user if you fail to provide the correct information', (done) => {
-    //   
-    //   
-    // });
+    it('should not let you get a user if you fail to provide the correct information', (done) => {
+      let authHeader = 'Basic ' + btoa(`${newUser.username}1111111:${newUser.password}`);
+      console.log('authHeader is ', authHeader);
+      chai.request(API_ADDRESS)
+        .get('/users')
+        .set('authorization', authHeader)
+        .end((err, res) => {
+          expect(err).to.not.equal(null);
+          expect(res.status).to.not.equal(200);
+          done();
+        });
+    });
     it('should give you back the user if you provide the correct information', (done) => {
       let authHeader = 'Basic ' + btoa(`${newUser.username}:${newUser.password}`);
       console.log('authHeader is ', authHeader);
@@ -82,12 +89,7 @@ describe('/users route', () => {
           expect(res.body.data).to.have.property('authToken');
           done();
         });
-      
-      
     });
-  //   it('should have provided data that is consistent with what is in the database', (done) => {
-  //     
-  //   });
   });
   
   
