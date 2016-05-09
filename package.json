@@ -1,0 +1,38 @@
+{
+  "name": "dummy-mongo-backend",
+  "version": "0.1.0",
+  "description": "Backend for scotland yard built with mongo as a learning exercise",
+  "main": "backend/server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "gulp test",
+    "start:db": "mongod -dbpath=./backend/db --smallfiles",
+    "start:server": "node backend/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BoardFellows/dummy-mongo-backend.git"
+  },
+  "author": "Frazier Mork <fraziermork@gmail.com> (https://frazier-fibonacci.herokuapp.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/BoardFellows/dummy-mongo-backend/issues"
+  },
+  "homepage": "https://github.com/BoardFellows/dummy-mongo-backend#readme",
+  "dependencies": {
+    "bcrypt": "^0.8.6",
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "jsonwebtoken": "^6.2.0",
+    "mongoose": "^4.4.15"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-http": "^2.0.1",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^2.2.0",
+    "mocha": "^2.4.5"
+  }
+}
